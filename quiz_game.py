@@ -14,18 +14,25 @@ class QuizGame:
     print("4. 점수 확인")
     print("5. 종료")
 
-  def show_menu_input(self):
+  def show_menu_input(self, max_value=5):
     print("========================================")
-    choice = get_selection(exit_msg="종료 신호를 받았습니다. 안전하게 종료합니다")
+    choice = get_selection(
+      max_value=5,
+      exit_msg="종료 신호를 받았습니다. 안전하게 종료합니다")
     return choice
+
+  def run(self):
+    try:
+      while True: 
+        quiz_game = QuizGame()
+        quiz_game.show_title()
+        quiz_game.show_menu()
+
+        choice = quiz_game.show_menu_input()
+        print(f"{choice} 입력됨")
+    except ExitSignalException:
+      pass # 메인 메뉴에서는 별도 처리없이 종료해도 안전함
 
 
 if __name__ == "__main__":
-  quiz_game = QuizGame()
-  quiz_game.show_title()
-  quiz_game.show_menu()
-  try:
-    choice = quiz_game.show_menu_input()
-    print(f"{choice} 입력됨")
-  except ExitSignalException:
-    pass # 메인 메뉴에서는 별도 처리없이 종료해도 안전함
+  QuizGame().run()
