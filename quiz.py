@@ -5,7 +5,7 @@ class Quiz:
     self, 
     question: str, 
     choices: List[str], 
-    answer: int # choices 중 정답의 index 표시
+    answer: int # choices 중 정답의 위치(index+1) 표시
   ):
     self.question = question
     self.choices = [*choices]
