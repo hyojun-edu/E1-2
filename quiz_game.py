@@ -14,7 +14,7 @@ class QuizGame:
     print("4. 점수 확인")
     print("5. 종료")
 
-  def show_menu_input(self, max_value=5):
+  def show_menu_input(self, max_value=5) -> int:
     print("========================================")
     choice = get_selection(
       max_value=5,

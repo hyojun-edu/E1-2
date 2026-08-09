@@ -36,4 +36,4 @@ if __name__ == "__main__":
   try:
     print(f"{get_selection()} 선택됨")
   except ExitSignalException:
-    print("TODO: 종료 시그널 시나리오 처리")
+    print("(종료 시그널 시나리오 처리)")
