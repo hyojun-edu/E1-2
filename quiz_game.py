@@ -1,12 +1,15 @@
+import sys
+from typing import List
+
 from input_util import get_selection
 from exceptions import ExitSignalException
-from typing import List
 from quiz import Quiz
 
 
 class QuizGame:
   def __init__(self):
-    self.quiz_list = self.load_quiz_list()
+    self.state = {}
+    self.state['quiz_list'] = self.load_quiz_list()
 
   def show_title(self):
     print("========================================")
@@ -50,14 +53,30 @@ class QuizGame:
         quiz_game.show_menu()
 
         choice = quiz_game.show_menu_input()
-        print(f"{choice} 입력됨")
+        match choice:
+          case 1:
+            pass
+          case 2:
+            pass
+          case 3:
+            pass
+          case 4:
+            pass
+          case 5:
+            self.save_and_exit()
+          case _:
+            print("입력이 올바르지 않습니다. 다시 입력해주세요.")
     except ExitSignalException:
-      pass # 메인 메뉴에서는 별도 처리없이 종료해도 안전함
+      self.save_and_exit()
 
+  def save_and_exit(self):
+    # TODO: self.state 값을 json으로 저장히고 끝내기
+    sys.exit(0)
+    
 
 if __name__ == "__main__":
   quiz_game = QuizGame()
-  for quiz in quiz_game.quiz_list:
+  for quiz in quiz_game.state['quiz_list']:
     print(quiz.question, quiz.choices, quiz.answer)
 
   quiz_game.run()
