@@ -23,8 +23,7 @@ class Quiz:
   def show_quiz_input(self) -> int:
     choice = get_selection(
       input_msg="정답 입력: ",
-      max_value=len(self.choices),
-      exit_msg="종료 신호를 받았습니다. 안전하게 게임을 종료합니다.")
+      max_value=len(self.choices))
     return choice
   
   def show_quiz_result(self, choice) -> bool:

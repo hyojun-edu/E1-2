@@ -9,12 +9,31 @@ from quiz import Quiz
 class QuizGame:
   def __init__(self):
     self.state = {}
-    self.state['quiz_list'] = self.load_quiz_list()
+    self.state["quizzes"] = self.load_quizzes()
+
+
+  def load_quizzes(self) -> List[Quiz]:
+    quizzes = None
+    # TODO: load quizzes from file
+
+    if not quizzes:
+      quizzes = [
+        Quiz("중국의 수도는?", ["상하이", "베이징", "칭다오", "하이난"], 2),
+        Quiz("러시아의 수도는?", ["샹트페테르부르크", "블라디보스토크", "모스크바", "카잔"], 3),
+        Quiz("일본의 수도는?", ["도쿄", "교토", "삿포로", "오사카"], 1),
+        Quiz("북한의 수도는?", ["함흥", "청진", "개성", "평양"], 4),
+        Quiz("대만의 수도는?", ["타이중", "타이난", "타이베이", "타오위안"], 3),
+      ]
+
+    return quizzes
+
 
   def show_title(self):
+    print()
     print("========================================")
     print("        🎯 나만의 퀴즈 게임 🎯          ")
     print("========================================")
+
 
   def show_menu(self):
     print("1. 퀴즈 풀기")
@@ -23,27 +42,13 @@ class QuizGame:
     print("4. 점수 확인")
     print("5. 종료")
 
+
   def show_menu_input(self, max_value=5) -> int:
     print("========================================")
     choice = get_selection(
-      max_value=5,
-      exit_msg="종료 신호를 받았습니다. 안전하게 종료합니다.")
+      max_value=5)
     return choice
 
-  def load_quiz_list(self) -> List[Quiz]:
-    quiz_list = None
-    # TODO: load quiz list from file
-
-    if not quiz_list:
-      quiz_list = [
-        Quiz("중국의 수도는?", ["상하이", "베이징", "칭다오", "하이난"], 2),
-        Quiz("러시아의 수도는?", ["샹트페테르부르크", "블라디보스토크", "모스크바", "카잔"], 3),
-        Quiz("일본의 수도는?", ["도쿄", "교토", "삿포로", "오사카"], 1),
-        Quiz("북한의 수도는?", ["함흥", "청진", "개성", "평양"], 4),
-        Quiz("대만의 수도는?", ["타이중", "타이난", "타이베이", "타오위안"], 3),
-      ]
-
-    return quiz_list
 
   def run(self):
     try:
@@ -55,7 +60,7 @@ class QuizGame:
         choice = quiz_game.show_menu_input()
         match choice:
           case 1:
-            pass
+            self.play_quiz()
           case 2:
             pass
           case 3:
@@ -69,14 +74,47 @@ class QuizGame:
     except ExitSignalException:
       self.save_and_exit()
 
+
+  def play_quiz(self):
+    quizzes = self.state["quizzes"]
+    n = len(quizzes)
+
+    if n == 0:
+      print("풀 수 있는 문제가 없습니다.")
+      return
+
+    print()
+    print(f"📝 퀴즈를 시작합니다! (총 {n}문제)")
+
+    for i, quiz in enumerate(quizzes):
+      print()
+      print("----------------------------------------")
+      print(f"[문제 {i+1}]")
+      print(quiz.question)
+      for j, choice in enumerate(quiz.choices):
+        print(f"{j+1}. {choice}")
+
+      try:
+        choice = quiz.show_quiz_input()
+        result = quiz.show_quiz_result(choice)
+
+        if result == True:
+          # TODO: 점수 증가 처리
+          pass
+      except ExitSignalException:
+        self.save_and_exit()
+      
+    pass
+
+
   def save_and_exit(self):
     # TODO: self.state 값을 json으로 저장히고 끝내기
     sys.exit(0)
-    
+
 
 if __name__ == "__main__":
   quiz_game = QuizGame()
-  for quiz in quiz_game.state['quiz_list']:
+  for quiz in quiz_game.state["quizzes"]:
     print(quiz.question, quiz.choices, quiz.answer)
 
   quiz_game.run()
