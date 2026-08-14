@@ -76,8 +76,16 @@ class QuizGame:
 
 
   def play_quiz(self):
+    # TODO: 몇 문제를 풀지 선택할 수 있다.
     quizzes = self.state["quizzes"]
+    # TODO: 
+
     n = len(quizzes)
+
+    self.quiz_count = {
+      "correct": 0,
+      "total": n
+    }
 
     if n == 0:
       print("풀 수 있는 문제가 없습니다.")
@@ -91,20 +99,35 @@ class QuizGame:
       print("----------------------------------------")
       print(f"[문제 {i+1}]")
       print(quiz.question)
+      # TODO: 풀이 중 힌트를 볼 수 있다.
       for j, choice in enumerate(quiz.choices):
         print(f"{j+1}. {choice}")
 
       try:
         choice = quiz.show_quiz_input()
+
+        # TODO: 힌트 사용시 점수 차감로직을 구현한다.
         result = quiz.show_quiz_result(choice)
 
         if result == True:
-          # TODO: 점수 증가 처리
+          self.quiz_count["correct"] += 1
           pass
       except ExitSignalException:
         self.save_and_exit()
-      
-    pass
+
+    self.show_quiz_result()
+
+
+  def show_quiz_result(self):
+    correct_quiz_count = self.quiz_count['correct']
+    total_quiz_count = self.quiz_count['total']
+    score = (correct_quiz_count * 100) // total_quiz_count
+
+    print("========================================")
+    print(f"🏆 결과: {total_quiz_count}문제 중 {correct_quiz_count}문제 정답! ({score}점)")
+    # TODO: 최고 점수 갱신 확인해서 추가 메시지 표시하기
+    # print("🎉 새로운 최고 점수입니다!")
+    print("========================================")
 
 
   def save_and_exit(self):
