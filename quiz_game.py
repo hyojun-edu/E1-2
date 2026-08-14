@@ -1,6 +1,7 @@
 import sys
 from typing import List
 import json
+from random import sample
 
 from input_util import get_selection
 from exceptions import ExitSignalException
@@ -96,8 +97,7 @@ class QuizGame:
       min_value=1,
       max_value=n)
 
-    selected_quizzes = self.quizzes[:k]
-    # TODO: 랜덤으로 문제를 출제한다.
+    selected_quizzes = sample(self.quizzes, k)
 
     self.quiz_count = {
       "correct": 0,
