@@ -83,8 +83,7 @@ class QuizGame:
             # TODO: 퀴즈 삭제 구현
             pass
           case 4:
-            # TODO: 퀴즈 목록 구현
-            pass
+            self.show_quiz_list()
           case 5:
             # TODO: 점수 기록 히스토리 구현
             pass
@@ -156,6 +155,7 @@ class QuizGame:
 
 
   def add_quiz(self):
+    print()
     print("📌 새로운 퀴즈를 추가합니다.")
 
     question = input("문제를 입력하세요: ")
@@ -178,6 +178,15 @@ class QuizGame:
     self.save()
 
 
+  def show_quiz_list(self):
+    print()
+    print(f"📋 등록된 퀴즈 목록 (총 {len(self.quizzes)}개)")
+    print()
+    print("----------------------------------------")
+    for i, quiz in enumerate(self.quizzes):
+      print(f"[{i+1}] {quiz.question}")
+    print("----------------------------------------")
+
   def save(self):
     with open(STATE_JSON_FILENAME, "w", encoding="utf-8") as f:
       json.dump({
@@ -192,7 +201,4 @@ class QuizGame:
 
 if __name__ == "__main__":
   quiz_game = QuizGame()
-  for quiz in quiz_game.quizzes:
-    print(quiz.question, quiz.choices, quiz.answer, quiz.hint)
-
   quiz_game.run()
