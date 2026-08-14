@@ -90,14 +90,18 @@ class QuizGame:
 
 
   def play_quiz(self):
-    # TODO: 몇 문제를 풀지 선택할 수 있다.
-    # TODO: 랜덤으로 문제를 출제한다.
-
     n = len(self.quizzes)
+    k = get_selection(
+      input_msg=f"몇 문제 푸실건가요?(1~{n}): ",
+      min_value=1,
+      max_value=n)
+
+    selected_quizzes = self.quizzes[:k]
+    # TODO: 랜덤으로 문제를 출제한다.
 
     self.quiz_count = {
       "correct": 0,
-      "total": n
+      "total": k
     }
 
     if n == 0:
@@ -105,9 +109,9 @@ class QuizGame:
       return
 
     print()
-    print(f"📝 퀴즈를 시작합니다! (총 {n}문제)")
+    print(f"📝 퀴즈를 시작합니다! (총 {k}문제)")
 
-    for i, quiz in enumerate(self.quizzes):
+    for i, quiz in enumerate(selected_quizzes):
       print()
       print("----------------------------------------")
       quiz.show_quiz(i+1)

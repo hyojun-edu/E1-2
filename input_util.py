@@ -2,7 +2,7 @@ from exceptions import InvalidInputException, ExitSignalException
 
 
 def get_selection(
-    min_value=0, 
+    min_value=1, 
     max_value=4, 
     input_msg="선택: ",
     err_msg="입력이 올바르지 않습니다. 다시 입력해주세요.",
