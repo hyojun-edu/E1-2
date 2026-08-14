@@ -53,15 +53,16 @@ class QuizGame:
   def show_menu(self):
     print("1. 퀴즈 풀기")
     print("2. 퀴즈 추가")
-    print("3. 퀴즈 목록")
-    print("4. 점수 확인")
-    print("5. 종료")
+    print("3. 퀴즈 삭제")
+    print("4. 퀴즈 목록")
+    print("5. 점수 확인")
+    print("6. 종료")
 
 
   def show_menu_input(self, max_value=5) -> int:
     print("========================================")
     choice = get_selection(
-      max_value=5)
+      max_value=max_value)
     return choice
 
 
@@ -72,17 +73,22 @@ class QuizGame:
         quiz_game.show_title()
         quiz_game.show_menu()
 
-        choice = quiz_game.show_menu_input()
+        choice = quiz_game.show_menu_input(max_value=6)
         match choice:
           case 1:
             self.play_quiz()
           case 2:
-            pass
+            self.add_quiz()
           case 3:
+            # TODO: 퀴즈 삭제 구현
             pass
           case 4:
+            # TODO: 퀴즈 목록 구현
             pass
           case 5:
+            # TODO: 점수 기록 히스토리 구현
+            pass
+          case 6:
             self.save_and_exit()
           case _:
             print("입력이 올바르지 않습니다. 다시 입력해주세요.")
@@ -138,7 +144,7 @@ class QuizGame:
   def show_quiz_result(self):
     correct_quiz_count = self.quiz_count['correct']
     total_quiz_count = self.quiz_count['total']
-    score = (correct_quiz_count * 100) // total_quiz_count
+    score = int((correct_quiz_count * 100) // total_quiz_count)
 
     print("========================================")
     print(f"🏆 결과: {total_quiz_count}문제 중 {correct_quiz_count}문제 정답! ({score}점)")
@@ -149,12 +155,38 @@ class QuizGame:
     print("========================================")
 
 
-  def save_and_exit(self):
+  def add_quiz(self):
+    print("📌 새로운 퀴즈를 추가합니다.")
+
+    question = input("문제를 입력하세요: ")
+    n_choices = get_selection(
+      input_msg="보기 수를 선택하세요(2~5): ", 
+      min_value=2,
+      max_value=5)
+    choices = [input(f"선택지 {i+1}: ") for i in range(n_choices)]
+    answer = get_selection(
+      input_msg=f"정답번호 (1~{n_choices}): ",
+      max_value=n_choices
+    )
+    hint = input("힌트(입력하지 않으려면 그냥 Enter키로 스킵): ")
+    self.quizzes.append(Quiz(
+      question=question,
+      choices=choices,
+      answer=answer,
+      hint=hint if len(hint) > 0 else None
+    ))
+    self.save()
+
+
+  def save(self):
     with open(STATE_JSON_FILENAME, "w", encoding="utf-8") as f:
       json.dump({
         "best_score": self.best_score,
         "quizzes": [quiz.to_dict() for quiz in self.quizzes]
       }, f)
+
+  def save_and_exit(self):
+    self.save()
     sys.exit(0)
 
 
