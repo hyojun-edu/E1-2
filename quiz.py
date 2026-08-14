@@ -13,6 +13,13 @@ class Quiz:
     self.choices = [*choices]
     self.answer = answer
 
+  def to_dict(self):
+    return {
+      "question": self.question,
+      "choices": self.choices,
+      "answer": self.answer
+    }
+
   def show_quiz(self, number: int):
     print(f"[문제 {number}]")
     print(self.question)

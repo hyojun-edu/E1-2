@@ -1,22 +1,35 @@
 import sys
 from typing import List
+import json
 
 from input_util import get_selection
 from exceptions import ExitSignalException
 from quiz import Quiz
 
+STATE_JSON_FILENAME = "state.json"
 
 class QuizGame:
   def __init__(self):
-    self.state = {}
-    self.state["quizzes"] = self.load_quizzes()
+    try:
+      with open(STATE_JSON_FILENAME, 'r', encoding='utf-8') as f:
+        state = json.load(f)
+    except:
+      state = {}
+    
+    self.best_score = state.get("best_score", 0)
+    self.quizzes = self.load_quizzes(state.get("quizzes"))
 
 
-  def load_quizzes(self) -> List[Quiz]:
-    quizzes = None
-    # TODO: load quizzes from file
-
-    if not quizzes:
+  def load_quizzes(self, quizzes_from_state_json) -> List[Quiz]:
+    if quizzes_from_state_json is not None and len(quizzes_from_state_json) > 0:
+      quizzes = [
+        Quiz(
+          quiz_dict["question"], 
+          quiz_dict["choices"], 
+          quiz_dict["answer"]
+          ) for quiz_dict in quizzes_from_state_json
+      ]
+    else:
       quizzes = [
         Quiz("중국의 수도는?", ["상하이", "베이징", "칭다오", "하이난"], 2),
         Quiz("러시아의 수도는?", ["샹트페테르부르크", "블라디보스토크", "모스크바", "카잔"], 3),
@@ -77,10 +90,9 @@ class QuizGame:
 
   def play_quiz(self):
     # TODO: 몇 문제를 풀지 선택할 수 있다.
-    quizzes = self.state["quizzes"]
-    # TODO: 
+    # TODO: 랜덤으로 문제를 출제한다.
 
-    n = len(quizzes)
+    n = len(self.quizzes)
 
     self.quiz_count = {
       "correct": 0,
@@ -94,7 +106,7 @@ class QuizGame:
     print()
     print(f"📝 퀴즈를 시작합니다! (총 {n}문제)")
 
-    for i, quiz in enumerate(quizzes):
+    for i, quiz in enumerate(self.quizzes):
       print()
       print("----------------------------------------")
       print(f"[문제 {i+1}]")
@@ -125,19 +137,25 @@ class QuizGame:
 
     print("========================================")
     print(f"🏆 결과: {total_quiz_count}문제 중 {correct_quiz_count}문제 정답! ({score}점)")
-    # TODO: 최고 점수 갱신 확인해서 추가 메시지 표시하기
-    # print("🎉 새로운 최고 점수입니다!")
+
+    if (score > self.best_score):
+      self.best_score = score
+      print("🎉 새로운 최고 점수입니다!")
     print("========================================")
 
 
   def save_and_exit(self):
-    # TODO: self.state 값을 json으로 저장히고 끝내기
+    with open(STATE_JSON_FILENAME, "w", encoding="utf-8") as f:
+      json.dump({
+        "best_score": self.best_score,
+        "quizzes": [quiz.to_dict() for quiz in self.quizzes]
+      }, f)
     sys.exit(0)
 
 
 if __name__ == "__main__":
   quiz_game = QuizGame()
-  for quiz in quiz_game.state["quizzes"]:
+  for quiz in quiz_game.quizzes:
     print(quiz.question, quiz.choices, quiz.answer)
 
   quiz_game.run()
