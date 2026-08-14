@@ -80,8 +80,7 @@ class QuizGame:
           case 2:
             self.add_quiz()
           case 3:
-            # TODO: 퀴즈 삭제 구현
-            pass
+            self.delete_quiz()
           case 4:
             self.show_quiz_list()
           case 5:
@@ -186,6 +185,23 @@ class QuizGame:
     for i, quiz in enumerate(self.quizzes):
       print(f"[{i+1}] {quiz.question}")
     print("----------------------------------------")
+
+
+  def delete_quiz(self):
+    choice = get_selection(
+      input_msg="삭제할 퀴즈 번호를 입력하세요(취소는 0): ",
+      min_value=0,
+      max_value=len(self.quizzes))
+    print(f"[{choice}] {self.quizzes[choice-1].question} 정말 삭제하시겠습니까?")
+    confirm = get_selection(
+          input_msg="삭제=1, 취소=0: ",
+          min_value=0,
+          max_value=1)
+    if confirm == 1:
+      self.quizzes.pop(choice-1)
+      self.save()
+    else:
+      print("식제 취소되었습니다.")
 
   def save(self):
     with open(STATE_JSON_FILENAME, "w", encoding="utf-8") as f:
