@@ -115,7 +115,11 @@ class QuizGame:
       try:
         choice = quiz.show_quiz_input()
 
-        # TODO: 힌트 사용시 점수 차감로직을 구현한다.
+        if choice == 0:
+          print(f"힌트: {quiz.hint}")
+          self.quiz_count['correct'] -= 0.5
+          choice = quiz.show_quiz_input(hint_used=True)
+
         result = quiz.show_quiz_result(choice)
 
         if result == True:

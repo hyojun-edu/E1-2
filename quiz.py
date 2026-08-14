@@ -34,10 +34,10 @@ class Quiz:
       print("* 힌트를 사용하시려면 0을 입력하세요 (0.5점 차감)")
 
   
-  def show_quiz_input(self) -> int:
+  def show_quiz_input(self, hint_used: bool = False) -> int:
     choice = get_selection(
       input_msg="정답 입력: ",
-      min_value=0,
+      min_value=1 if self.hint is None or hint_used else 0,
       max_value=len(self.choices))
     return choice
   
