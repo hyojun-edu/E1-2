@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from input_util import get_selection
 from exceptions import ExitSignalException
 
@@ -7,16 +7,19 @@ class Quiz:
     self, 
     question: str, 
     choices: List[str], 
-    answer: int # choices 중 정답의 위치(index+1) 표시
+    answer: int, # choices 중 정답의 위치(index+1) 표시
+    hint: Optional[str] = None
   ):
     self.question = question
     self.choices = [*choices]
     self.answer = answer
-
+    self.hint = hint
+    
   def to_dict(self):
     return {
       "question": self.question,
       "choices": self.choices,
+      "hint": self.hint,
       "answer": self.answer
     }
 
@@ -26,10 +29,15 @@ class Quiz:
     print()
     for i, choice in enumerate(self.choices):
       print(f"{i+1}. {choice}")
+    
+    if self.hint is not None:
+      print("* 힌트를 사용하시려면 0을 입력하세요 (0.5점 차감)")
+
   
   def show_quiz_input(self) -> int:
     choice = get_selection(
       input_msg="정답 입력: ",
+      min_value=0,
       max_value=len(self.choices))
     return choice
   

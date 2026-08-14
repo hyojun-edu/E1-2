@@ -26,12 +26,13 @@ class QuizGame:
         Quiz(
           quiz_dict["question"], 
           quiz_dict["choices"], 
-          quiz_dict["answer"]
+          quiz_dict["answer"],
+          quiz_dict["hint"]
           ) for quiz_dict in quizzes_from_state_json
       ]
     else:
       quizzes = [
-        Quiz("중국의 수도는?", ["상하이", "베이징", "칭다오", "하이난"], 2),
+        Quiz("중국의 수도는?", ["상하이", "베이징", "칭다오", "하이난"], 2, "오리 요리로 유명한 도시!"),
         Quiz("러시아의 수도는?", ["샹트페테르부르크", "블라디보스토크", "모스크바", "카잔"], 3),
         Quiz("일본의 수도는?", ["도쿄", "교토", "삿포로", "오사카"], 1),
         Quiz("북한의 수도는?", ["함흥", "청진", "개성", "평양"], 4),
@@ -109,11 +110,7 @@ class QuizGame:
     for i, quiz in enumerate(self.quizzes):
       print()
       print("----------------------------------------")
-      print(f"[문제 {i+1}]")
-      print(quiz.question)
-      # TODO: 풀이 중 힌트를 볼 수 있다.
-      for j, choice in enumerate(quiz.choices):
-        print(f"{j+1}. {choice}")
+      quiz.show_quiz(i+1)
 
       try:
         choice = quiz.show_quiz_input()
@@ -156,6 +153,6 @@ class QuizGame:
 if __name__ == "__main__":
   quiz_game = QuizGame()
   for quiz in quiz_game.quizzes:
-    print(quiz.question, quiz.choices, quiz.answer)
+    print(quiz.question, quiz.choices, quiz.answer, quiz.hint)
 
   quiz_game.run()
