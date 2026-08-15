@@ -2,7 +2,9 @@ import sys
 from typing import List
 import json
 from random import sample
+import datetime
 
+from quiz_record import QuizRecord
 from input_util import get_selection
 from exceptions import ExitSignalException
 from quiz import Quiz
@@ -12,13 +14,19 @@ STATE_JSON_FILENAME = "state.json"
 class QuizGame:
   def __init__(self):
     try:
-      with open(STATE_JSON_FILENAME, 'r', encoding='utf-8') as f:
+      with open(STATE_JSON_FILENAME, "r", encoding="utf-8") as f:
         state = json.load(f)
     except:
       state = {}
-    
-    self.best_score = state.get("best_score", 0)
+
+    self.current_record = None
+    self.best_score = state.get("best_score")
     self.quizzes = self.load_quizzes(state.get("quizzes"))
+    self.records = [QuizRecord(
+      timestamp=record["timestamp"],
+      total=record["total"],
+      correct=record["correct"]
+    ) for record in state.get("records", [])]
 
 
   def load_quizzes(self, quizzes_from_state_json) -> List[Quiz]:
@@ -84,8 +92,7 @@ class QuizGame:
           case 4:
             self.show_quiz_list()
           case 5:
-            # TODO: 점수 기록 히스토리 구현
-            pass
+            self.show_records()
           case 6:
             self.save_and_exit()
           case _:
@@ -103,7 +110,7 @@ class QuizGame:
 
     selected_quizzes = sample(self.quizzes, k)
 
-    self.quiz_count = {
+    self.current_record = {
       "correct": 0,
       "total": k
     }
@@ -125,30 +132,36 @@ class QuizGame:
 
         if choice == 0:
           print(f"힌트: {quiz.hint}")
-          self.quiz_count['correct'] -= 0.5
+          self.current_record["correct"] -= 0.5
           choice = quiz.show_quiz_input(hint_used=True)
 
         result = quiz.show_quiz_result(choice)
 
         if result == True:
-          self.quiz_count["correct"] += 1
+          self.current_record["correct"] += 1
           pass
       except ExitSignalException:
         self.save_and_exit()
 
     self.show_quiz_result()
+    self.save()
 
 
   def show_quiz_result(self):
-    correct_quiz_count = self.quiz_count['correct']
-    total_quiz_count = self.quiz_count['total']
-    score = int((correct_quiz_count * 100) // total_quiz_count)
+    correct = self.current_record["correct"]
+    total = self.current_record["total"]
+    score = int((correct * 100) / total)
 
     print("========================================")
-    print(f"🏆 결과: {total_quiz_count}문제 중 {correct_quiz_count}문제 정답! ({score}점)")
+    print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
 
-    if (score > self.best_score):
-      self.best_score = score
+    best_score = int(self.best_score["correct"] * 100 / self.best_score["total"]) if self.best_score else 0
+
+    if (score > best_score):
+      self.best_score = {
+        'total': self.current_record['total'],
+        'correct': self.current_record['correct']
+      }
       print("🎉 새로운 최고 점수입니다!")
     print("========================================")
 
@@ -192,23 +205,53 @@ class QuizGame:
       input_msg="삭제할 퀴즈 번호를 입력하세요(취소는 0): ",
       min_value=0,
       max_value=len(self.quizzes))
-    print(f"[{choice}] {self.quizzes[choice-1].question} 정말 삭제하시겠습니까?")
-    confirm = get_selection(
-          input_msg="삭제=1, 취소=0: ",
-          min_value=0,
-          max_value=1)
-    if confirm == 1:
-      self.quizzes.pop(choice-1)
-      self.save()
+
+    if choice != 0:
+      print(f"[{choice}] {self.quizzes[choice-1].question} 정말 삭제하시겠습니까?")
+      confirm = get_selection(
+            input_msg="삭제=1, 취소=0: ",
+            min_value=0,
+            max_value=1)
+      if confirm == 1:
+        self.quizzes.pop(choice-1)
+        self.save()
+        return
+      
+    print("식제 취소되었습니다.")
+
+
+  def show_records(self):
+    if not self.best_score:
+      print("아직 최고점수가 없습니다. 퀴즈 풀기 후 다시 확인하세요.")
     else:
-      print("식제 취소되었습니다.")
+      total = self.best_score['total']
+      correct = self.best_score['correct']
+      score = int(correct * 100/total)
+      print(f"🏆 최고 점수: {score}점 ({total}문제 중 {correct}문제 정답)")
+      print()
+      for record in self.records:
+        print(f"날짜/시간: {datetime.datetime.fromtimestamp(record.timestamp).strftime('%Y-%m-%d %H:%M:%S')}")
+        print(f"푼 문제 수: {record.correct}")
+        print(f"점수: {int(record.correct * 100 / record.total)}")
+
 
   def save(self):
+    if self.current_record is not None:
+      self.records.append(
+        QuizRecord(
+          timestamp=datetime.datetime.now().timestamp(),
+          total=self.current_record["total"],
+          correct=self.current_record["correct"])
+      )
+      self.current_record = None
+    
     with open(STATE_JSON_FILENAME, "w", encoding="utf-8") as f:
       json.dump({
         "best_score": self.best_score,
-        "quizzes": [quiz.to_dict() for quiz in self.quizzes]
+        "quizzes": [quiz.to_dict() for quiz in self.quizzes],
+        "records": [record.to_dict() for record in self.records]
       }, f)
+
 
   def save_and_exit(self):
     self.save()
