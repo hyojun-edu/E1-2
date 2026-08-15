@@ -167,27 +167,31 @@ class QuizGame:
 
 
   def add_quiz(self):
-    print()
-    print("📌 새로운 퀴즈를 추가합니다.")
+    try:
+      print()
+      print("📌 새로운 퀴즈를 추가합니다.")
 
-    question = input("문제를 입력하세요: ")
-    n_choices = get_selection(
-      input_msg="보기 수를 선택하세요(2~5): ", 
-      min_value=2,
-      max_value=5)
-    choices = [input(f"선택지 {i+1}: ") for i in range(n_choices)]
-    answer = get_selection(
-      input_msg=f"정답번호 (1~{n_choices}): ",
-      max_value=n_choices
-    )
-    hint = input("힌트(입력하지 않으려면 그냥 Enter키로 스킵): ")
-    self.quizzes.append(Quiz(
-      question=question,
-      choices=choices,
-      answer=answer,
-      hint=hint if len(hint) > 0 else None
-    ))
-    self.save()
+      question = input("문제를 입력하세요: ")
+      n_choices = get_selection(
+        input_msg="보기 수를 선택하세요(2~5): ", 
+        min_value=2,
+        max_value=5)
+      choices = [input(f"선택지 {i+1}: ") for i in range(n_choices)]
+      answer = get_selection(
+        input_msg=f"정답번호 (1~{n_choices}): ",
+        max_value=n_choices
+      )
+      hint = input("힌트(입력하지 않으려면 그냥 Enter키로 스킵): ")
+      self.quizzes.append(Quiz(
+        question=question,
+        choices=choices,
+        answer=answer,
+        hint=hint if len(hint) > 0 else None
+      ))
+      self.save()
+    except (KeyboardInterrupt, EOFError):
+      print("퀴즈 추가가 취소되었습니다.")
+      self.save_and_exit()
 
 
   def show_quiz_list(self):
