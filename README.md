@@ -86,7 +86,13 @@ python3 app.py
 
 ## 스크린샷
  - 개발 환경 설정 스크린샷 + `git log --oneline --graph` 결과 스크린샷
+   - 10개 이상의 커밋 확인 ✅
+   - 브랜치 생성·병합 기록(merge 커밋 등) 확인 ✅
+   - 
 <img width="1443" height="1152" alt="개발환경 세팅 + git 로그" src="https://github.com/user-attachments/assets/42651ecc-0952-4496-bbe6-01a27de28c47" />
+ - git 실행 로그
+    - git clone, git pull, git push 등 명령어 실습 확인 ✅
+<img width="776" height="459" alt="image" src="https://github.com/user-attachments/assets/096bf938-57b0-40e1-9268-4d22b277545d" />
 
  - 프로그램 실행 결과 스크린샷
  
