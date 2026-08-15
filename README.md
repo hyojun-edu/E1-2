@@ -87,15 +87,23 @@ python3 app.py
 ## 스크린샷
  - 개발 환경 설정 스크린샷 + `git log --oneline --graph` 결과 스크린샷
 <img width="1443" height="1152" alt="개발환경 세팅 + git 로그" src="https://github.com/user-attachments/assets/42651ecc-0952-4496-bbe6-01a27de28c47" />
+
  - 프로그램 실행 결과 스크린샷
+ 
    - 메뉴
 <img width="439" height="245" alt="image" src="https://github.com/user-attachments/assets/bbfeeb5d-983c-4163-a681-40f466d800ae" />
+
    - 퀴즈 추가
 <img width="462" height="225" alt="image" src="https://github.com/user-attachments/assets/51d97d3e-a68c-48b6-8768-b5ddb24b176b" />
+
    - 목록
 <img width="429" height="245" alt="image" src="https://github.com/user-attachments/assets/4e4d0034-5f94-4f74-8ce3-62914f13e371" />
+
    - 플레이
 <img width="420" height="628" alt="image" src="https://github.com/user-attachments/assets/f0edb68a-79d4-491e-bff3-e52954515472" />
+
    - 점수
 <img width="442" height="323" alt="image" src="https://github.com/user-attachments/assets/ec8e506a-5c3b-41e8-9f72-ad98eb5c6e3a" />
 
+   - 삭제
+<img width="452" height="101" alt="image" src="https://github.com/user-attachments/assets/982e2d18-ebc4-4b17-9788-8ef0fdb856d4" />
