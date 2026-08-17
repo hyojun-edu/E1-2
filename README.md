@@ -27,56 +27,56 @@ python3 app.py
 ## 파일 구조
  - app.py: QuizGame 생성 및 실행
  - exceptions.py: 예외처리를 위한 커스텀 exception 정의
-  - InvalidInputException - 범위 밖의 입력이 들어왔을 때
-  - ExitSignalException - KeyboardInterrup, EOF 입력되었을 때
+   - InvalidInputException - 범위 밖의 입력이 들어왔을 때
+   - ExitSignalException - KeyboardInterrup, EOF 입력되었을 때
  - input_util.py: 사용자 입력을 받는 유틸리티 함수 정의
-  - get_selection - min_value~max_value사이의 숫자 입력만 허용하는 입력 UI 띄우고 선택된 값 반환
+   - get_selection - min_value~max_value사이의 숫자 입력만 허용하는 입력 UI 띄우고 선택된 값 반환
  - quiz.py: 퀴즈 데이터 관리 및 정답 판정 로직을 위한 Quiz 클래스 정의
-  - 속성:
-   - question: 퀴즈 질문
-   - choices: 선택지
-   - answer: 정답 번호
-   - hint: 힌트
-  - 메소드:
-   - show_quiz: 퀴즈 내용 출력
-   - show_quiz_input: 퀴즈 정답 입력 UI 띄우기
-   - show_quiz_result: 퀴즈 정답 여부 출력 및 판정 결과 반환
-   - to_dict: dict으로 변환 (json 저장시 사용)
+   - 속성:
+     - question: 퀴즈 질문
+     - choices: 선택지
+     - answer: 정답 번호
+     - hint: 힌트
+   - 메소드:
+     - show_quiz: 퀴즈 내용 출력
+     - show_quiz_input: 퀴즈 정답 입력 UI 띄우기
+     - show_quiz_result: 퀴즈 정답 여부 출력 및 판정 결과 반환
+     - to_dict: dict으로 변환 (json 저장시 사용)
  - quiz_record.py: 퀴즈 기록 데이터 담기 위한 QuizRecord 클래스 정의
-  - 속성:
-   - timestamp: 1970-01-01부터 초 단위 경과시간 (datetime.datetime.timestamp() 값)
-   - total: 전체 문제 수
-   - correct: 맞춘 문제 수
-  - 메소드:
-   - to_dict: dict으로 변환 (json 저장시 사용)
+   - 속성:
+     - timestamp: 1970-01-01부터 초 단위 경과시간 (datetime.datetime.timestamp() 값)
+     - total: 전체 문제 수
+     - correct: 맞춘 문제 수
+   - 메소드:
+     - to_dict: dict으로 변환 (json 저장시 사용)
  - quiz_game.py: 퀴즈 게임 실행을 위한 QuizGame 클래스 정의
-  - 속성: 
-    - quizzes: 퀴즈 데이터
-    - current_record: 현재 게임 기록
-    - best_score: 최고 게임 기록
-    - records: 전체 게임 기록
-  - 메소드: 
-    - run: 퀴즈 게임 어플리케이션 실행
-    - load_quizzes: 퀴즈 불러오기(state.json 없으면 기본 퀴즈셋 로드)
-    - show_title: 퀴즈 게임 타이틀 출력
-    - show_menu: 퀴즈 게임 메뉴 출력
-    - show_menu_input: 퀴즈 게임 메뉴 입력 받는 UI 띄우기
-    - play_quiz: 퀴즈 풀기
-    - show_quiz_result: 퀴즈 풀기 결과 출력
-    - add_quiz: 퀴즈 추가하기
-    - show_quiz_list: 퀴즈 목록 출력
-    - delete_quiz: 퀴즈 삭제하기
-    - show_records: 전체 게임 기록 및 최고 점수 출력
-    - save: 현재 상태 저장하기
-    - save_and_exit: 현재 상태 저장하고 종료하기
+   - 속성: 
+     - quizzes: 퀴즈 데이터
+     - current_record: 현재 게임 기록
+     - best_score: 최고 게임 기록
+     - records: 전체 게임 기록
+   - 메소드: 
+     - run: 퀴즈 게임 어플리케이션 실행
+     - load_quizzes: 퀴즈 불러오기(state.json 없으면 기본 퀴즈셋 로드)
+     - show_title: 퀴즈 게임 타이틀 출력
+     - show_menu: 퀴즈 게임 메뉴 출력
+     - show_menu_input: 퀴즈 게임 메뉴 입력 받는 UI 띄우기
+     - play_quiz: 퀴즈 풀기
+     - show_quiz_result: 퀴즈 풀기 결과 출력
+     - add_quiz: 퀴즈 추가하기
+     - show_quiz_list: 퀴즈 목록 출력
+     - delete_quiz: 퀴즈 삭제하기
+     - show_records: 전체 게임 기록 및 최고 점수 출력
+     - save: 현재 상태 저장하기
+     - save_and_exit: 현재 상태 저장하고 종료하기
 
 ## 요구변경 시 수정 위치
  - 각 기능에 따라 메소드가 QuizGame에 나누어져 구현되어 있기 때문에 요구사항 변경 발생시 해당 메소드의 내용을 찾아 수정하면 됨
- - 퀴즈 풀기 및 점수 계산 로직 -> QuizGame.play_quiz
- - 퀴즈 추가하기 -> QuizGame.add_quiz
- - 퀴즈 삭제하기 -> QuizGame.delete_quiz
- - 퀴즈 목룍보기 -> QuizGame.show_quiz_list
- - 퀴즈 점수보기 -> QuizGame.show_records
+   - 퀴즈 풀기 및 점수 계산 로직 -> QuizGame.play_quiz
+   - 퀴즈 추가하기 -> QuizGame.add_quiz
+   - 퀴즈 삭제하기 -> QuizGame.delete_quiz
+   - 퀴즈 목룍보기 -> QuizGame.show_quiz_list
+   - 퀴즈 점수보기 -> QuizGame.show_records
 
 ## 클래스 사용 이유(장점) 및 함수 대비 차이점
  - 클래스를 사용하면 매번 데이터(속성)을 파라미터로 넣어줄 필요 없이 메소드에서 클래스의 변수를 읽어 기능을 수행할 수 있다
@@ -85,17 +85,17 @@ python3 app.py
 
 ## 데이터 파일 설명(state.json)
  - best_score
-  - total: int - 전체 퀴즈 수
-  - correct: float - 맞춘 퀴즈 수 (힌트 사용시 소수점 단위로 차감될 수 있어 float 사용)
+   - total: int - 전체 퀴즈 수
+   - correct: float - 맞춘 퀴즈 수 (힌트 사용시 소수점 단위로 차감될 수 있어 float 사용)
  - quizzes: List[Quiz]
-  - question: str - 퀴즈 문제
-  - choices: List[str] - 선택지 배열
-  - answer: int - 정답 번호
-  - hint: Optional[str] - 힌트 (생략 가능)
+   - question: str - 퀴즈 문제
+   - choices: List[str] - 선택지 배열
+   - answer: int - 정답 번호
+   - hint: Optional[str] - 힌트 (생략 가능)
  - records: List[QuizRecord]
-  - timestamp: float - 퀴즈 종료 시간
-  - total: int - 전체 퀴즈 수
-  - correct: float - 맞춘 퀴즈 수 (힌트 사용시 소수점 단위로 차감될 수 있어 float 사용)
+   - timestamp: float - 퀴즈 종료 시간
+   - total: int - 전체 퀴즈 수
+   - correct: float - 맞춘 퀴즈 수 (힌트 사용시 소수점 단위로 차감될 수 있어 float 사용)
 
 ## best_score 필드 설계 시 중첩 구조 선택 이유
  - 단순 정답 밎춘 수 혹은 점수만 기록해서는 전체 중에 얼마나 맞추었는지를 표시할 수 없음
@@ -110,7 +110,7 @@ python3 app.py
  - 성능/메모리·검색 한계가 발생할 수 있음
    - 모든 퀴즈를 한번에 다 메모리에 올려야 함
    - 적절한 검색 매커니즘이 구현되어있지 않아서 특정 문제를 찾아야할 때 모든 퀴즈의 데이터에 대해서 탐색 필요
-  - 대용량 데이터로 확장해야 할 때는 DB 도입을 고려
+ - 대용량 데이터로 확장해야 할 때는 DB 도입을 고려
    - index를 이용한 검색 가능
    - 모든 데이터를 로드하지 말고 현재 읽고 써야하는 데이터 범위만 로드해서 사용
 
@@ -135,8 +135,8 @@ python3 app.py
  - 개발 환경 설정 스크린샷 + `git log --oneline --graph` 결과 스크린샷
    - 10개 이상의 커밋 확인 ✅
    - 브랜치 생성·병합 기록(merge 커밋 등) 확인 ✅
-   - 
 <img width="1443" height="1152" alt="개발환경 세팅 + git 로그" src="https://github.com/user-attachments/assets/42651ecc-0952-4496-bbe6-01a27de28c47" />
+ 
  - git 실행 로그
     - git clone, git pull, git push 등 명령어 실습 확인 ✅
 <img width="776" height="459" alt="image" src="https://github.com/user-attachments/assets/096bf938-57b0-40e1-9268-4d22b277545d" />
