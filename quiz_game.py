@@ -1,6 +1,7 @@
 import sys
 from typing import List
 import json
+import os
 from random import sample
 import datetime
 
@@ -12,11 +13,16 @@ from quiz import Quiz
 STATE_JSON_FILENAME = "state.json"
 
 class QuizGame:
+  # run()이 반복마다 QuizGame을 새로 만들기 때문에, 백업은 실행당 한 번만 남긴다.
+  state_file_backed_up = False
+
   def __init__(self):
     try:
       with open(STATE_JSON_FILENAME, "r", encoding="utf-8") as f:
         state = json.load(f)
     except:
+      print(f"{STATE_JSON_FILENAME} 파일 로드에 실패했습니다.")
+      self.backup_state_file()
       state = {}
 
     self.current_record = None
@@ -27,6 +33,24 @@ class QuizGame:
       total=record["total"],
       correct=record["correct"]
     ) for record in state.get("records", [])]
+
+
+  def backup_state_file(self):
+    """로드에 실패한 기존 파일을 .tmp로 복사해두어 나중에 수동 복구할 수 있게 한다."""
+    if QuizGame.state_file_backed_up or not os.path.exists(STATE_JSON_FILENAME):
+      return
+
+    QuizGame.state_file_backed_up = True
+    # microsecond까지 넣어서 같은 파일명이 겹치지 않게 한다.
+    timestamp = int(datetime.datetime.now().timestamp() * 1000000)
+    backup_filename = f"{STATE_JSON_FILENAME}.{timestamp}.tmp"
+
+    try:
+      with open(STATE_JSON_FILENAME, "rb") as src, open(backup_filename, "wb") as dst:
+        dst.write(src.read())
+      print(f"기존 파일을 {backup_filename} 로 백업했습니다. 필요하면 직접 확인해서 복구할 수 있습니다.")
+    except OSError as e:
+      print(f"기존 파일 백업에 실패했습니다: {e}")
 
 
   def load_quizzes(self, quizzes_from_state_json) -> List[Quiz]:
