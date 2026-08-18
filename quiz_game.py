@@ -13,16 +13,14 @@ from quiz import Quiz
 STATE_JSON_FILENAME = "state.json"
 
 class QuizGame:
-  # run()이 반복마다 QuizGame을 새로 만들기 때문에, 백업은 실행당 한 번만 남긴다.
-  state_file_backed_up = False
-
   def __init__(self):
     try:
       with open(STATE_JSON_FILENAME, "r", encoding="utf-8") as f:
         state = json.load(f)
     except:
-      print(f"{STATE_JSON_FILENAME} 파일 로드에 실패했습니다.")
-      self.backup_state_file()
+      if os.path.exists(STATE_JSON_FILENAME):
+        print(f"{STATE_JSON_FILENAME} 파일 로드에 실패했습니다.")
+        self.backup_state_file()
       state = {}
 
     self.current_record = None
@@ -36,11 +34,6 @@ class QuizGame:
 
 
   def backup_state_file(self):
-    """로드에 실패한 기존 파일을 .tmp로 복사해두어 나중에 수동 복구할 수 있게 한다."""
-    if QuizGame.state_file_backed_up or not os.path.exists(STATE_JSON_FILENAME):
-      return
-
-    QuizGame.state_file_backed_up = True
     # microsecond까지 넣어서 같은 파일명이 겹치지 않게 한다.
     timestamp = int(datetime.datetime.now().timestamp() * 1000000)
     backup_filename = f"{STATE_JSON_FILENAME}.{timestamp}.tmp"
@@ -101,11 +94,10 @@ class QuizGame:
   def run(self):
     try:
       while True: 
-        quiz_game = QuizGame()
-        quiz_game.show_title()
-        quiz_game.show_menu()
+        self.show_title()
+        self.show_menu()
 
-        choice = quiz_game.show_menu_input(max_value=6)
+        choice = self.show_menu_input(max_value=6)
         match choice:
           case 1:
             self.play_quiz()
