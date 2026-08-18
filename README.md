@@ -75,7 +75,7 @@ python3 app.py
    - 퀴즈 풀기 및 점수 계산 로직 -> QuizGame.play_quiz
    - 퀴즈 추가하기 -> QuizGame.add_quiz
    - 퀴즈 삭제하기 -> QuizGame.delete_quiz
-   - 퀴즈 목룍보기 -> QuizGame.show_quiz_list
+   - 퀴즈 목록보기 -> QuizGame.show_quiz_list
    - 퀴즈 점수보기 -> QuizGame.show_records
 
 ## 클래스 사용 이유(장점) 및 함수 대비 차이점
